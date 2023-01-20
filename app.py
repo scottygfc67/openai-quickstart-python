@@ -26,11 +26,16 @@ printify_api_key = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIzN2Q0YmQzMDM
 def generate_image():
     product_dict = {}
     if request.method == "POST":
-        animal = request.form["animal"]
-        response = openai.Completion.create(
-            model="text-davinci-002",
-            prompt=generate_prompt(animal),
-            temperature=0.6,
+        prompt = request.form["prompt"]
+        response = openai.Image.create(
+            prompt=prompt,
+            n=1,
+            size="1024x1024"
+        )
+        cloudinary.config( 
+          cloud_name = "dxcwdhzto", 
+          api_key = "221381686384761", 
+          api_secret = "7fLjJeOdFJ1o8hi5UBqwnas_IiM" 
         )
 
         image_url = response['data'][0]['url']
