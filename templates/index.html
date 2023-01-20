@@ -1,21 +1,253 @@
-<!DOCTYPE html>
-<head>
-  <title>OpenAI Quickstart</title>
-  <link
-    rel="shortcut icon"
-    href="{{ url_for('static', filename='dog.png') }}"
-  />
-  <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}" />
-</head>
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-<body>
-  <img src="{{ url_for('static', filename='dog.png') }}" class="icon" />
-  <h3>Name my pet</h3>
-  <form action="/" method="post">
-    <input type="text" name="animal" placeholder="Enter an animal" required />
-    <input type="submit" value="Generate names" />
-  </form>
-  {% if result %}
-  <div class="result">{{ result }}</div>
-  {% endif %}
-</body>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="C:\Users\brigg\Documents\EssayAI\openai-quickstart-python\templates\styles.css" type="text/css">
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap');
+      body {
+        background-color: aqua;
+        font-family: "Poppins", sans-serif;
+      }
+      
+      a,
+      a:hover {
+          text-decoration: none;
+          color: inherit;
+      }
+
+      .section-products {
+          padding: 80px 0 54px;
+      }
+
+      .section-products .header {
+          margin-bottom: 50px;
+      }
+
+      .section-products .header h3 {
+          font-size: 1rem;
+          color: #fe302f;
+          font-weight: 500;
+      }
+
+      .section-products .header h2 {
+          font-size: 2.2rem;
+          font-weight: 400;
+          color: #444444; 
+      }
+
+      .section-products .single-product {
+          margin-bottom: 26px;
+      }
+
+      .section-products .single-product .part-1 {
+          position: relative;
+          height: 290px;
+          max-height: 290px;
+          margin-bottom: 20px;
+          overflow: hidden;
+      }
+
+      .section-products .single-product .part-1::before {
+          position: absolute;
+          content: "";
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          z-index: -1;
+          transition: all 0.3s;
+      }
+
+      .section-products .single-product:hover .part-1::before {
+          transform: scale(1.2,1.2) rotate(5deg);
+      }
+
+      .section-products .single-product .part-1 .discount,
+      .section-products .single-product .part-1 .new {
+          position: absolute;
+          top: 15px;
+          left: 20px;
+          color: #ffffff;
+          background-color: #fe302f;
+          padding: 2px 8px;
+          text-transform: uppercase;
+          font-size: 0.85rem;
+      }
+
+      .section-products .single-product .part-1 .new {
+          left: 0;
+          background-color: #444444;
+      }
+
+      .section-products .single-product .part-1 ul {
+          position: absolute;
+          bottom: -41px;
+          left: 20px;
+          margin: 0;
+          padding: 0;
+          list-style: none;
+          opacity: 0;
+          transition: bottom 0.5s, opacity 0.5s;
+      }
+
+      .section-products .single-product:hover .part-1 ul {
+          bottom: 30px;
+          opacity: 1;
+      }
+
+      .section-products .single-product .part-1 ul li {
+          display: inline-block;
+          margin-right: 4px;
+      }
+
+      .section-products .single-product .part-1 ul li a {
+          display: inline-block;
+          width: 40px;
+          height: 40px;
+          line-height: 40px;
+          background-color: #ffffff;
+          color: #444444;
+          text-align: center;
+          box-shadow: 0 2px 20px rgb(50 50 50 / 10%);
+          transition: color 0.2s;
+      }
+
+      .section-products .single-product .part-1 ul li a:hover {
+          color: #fe302f;
+      }
+
+      .section-products .single-product .part-2 .product-title {
+          font-size: 1rem;
+      }
+
+      .section-products .single-product .part-2 h4 {
+          display: inline-block;
+          font-size: 1rem;
+      }
+
+      .section-products .single-product .part-2 .product-old-price {
+          position: relative;
+          padding: 0 7px;
+          margin-right: 2px;
+          opacity: 0.6;
+      }
+
+      .section-products .single-product .part-2 .product-old-price::after {
+          position: absolute;
+          content: "";
+          top: 50%;
+          left: 0;
+          width: 100%;
+          height: 1px;
+          background-color: #444444;
+          transform: translateY(-50%);
+      }
+    </style>
+
+    <script>
+      function addToCart(productId) {
+    fetch('/add_to_cart/'+ productId, {
+        method: 'GET'
+    })
+    .then(response => response.text())
+    .then(data => {
+        console.log(data);
+    });
+}
+    </script>
+    <title>Image Generator</title>
+  </head>
+  <body>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="#">SMARTPRINTS</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="/">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/cart">Cart</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    
+
+    <form>
+      <div class="form-group">
+        <label class="label" for="country">Select your nearest region:</label><br>
+        <select id="country" name="country">
+          <option value="United States">United States</option>
+          <option value="United Kingdom">United Kingdom</option>
+          <option value="Europe">Europe</option>
+          <option value="Rest of World">Rest of World</option>
+        </select>
+      </div>
+    </form> 
+
+    <div class="container mt-5">
+      <h1 class="text-center mb-5">SMARTPRINTS</h1>
+      <form method="POST" action="{{url_for('generate_image')}}">
+        <div class="form-group">
+          <label for="prompt">Prompt</label>
+          <textarea class="form-control" id="prompt" name="prompt" rows="3"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Generate Products</button>
+      </form>
+    </div>
+
+    <p>{{image_url}}</p> 
+    <section class="section-products">
+      <div class="container">
+          <div class="row justify-content-center text-center">
+              <div class="col-md-8 col-lg-6">
+                  <div class="header">
+                      <h2>Products</h2>
+                  </div>
+              </div>
+          </div>
+          <div class="row">
+              <!-- Single Product -->
+              {% if product_dict %}
+                {% for product_name, product_info in product_dict.items() %}
+                <div class="col-md-6 col-lg-4 col-xl-3">
+                    <div id="product-1" class="single-product" style="background:url({{product_info.product_image_url}}); background-size: contain; background-repeat: no-repeat">
+                        <div class="part-1">
+                            <ul>
+                                <button onclick="addToCart('{{product_info.product_id}}')">Add to Cart</button>
+                                <li><a href="#"><i class="fas fa-shopping-cart"></i></a></li>
+                                <li><a href="#"><i class="fas fa-heart"></i></a></li>
+                                <li><a href="#"><i class="fas fa-plus"></i></a></li>
+                                <li><a href="#"><i class="fas fa-expand"></i></a></li>
+                            </ul>
+                        </div>
+                        <div class="part-2">
+                            <h3 class="product-title">{{product_info.product_title}}</h3>
+                            <h4 class="product-old-price">$79.99</h4>
+                            <h4 class="product-price">$49.99</h4>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+              {% endif %}
+          </div>
+      </div>
+  </section>
+      
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.16.1/dist/umd/popper.min.js" integrity="sha384-QOE6OfbHWw7VvGJfpyZlV1hOcN/X9vxdhIPJNgQOlb8bOuV7vD/OTpdsV7N/8dDI" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+r
